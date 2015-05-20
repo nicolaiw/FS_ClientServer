@@ -18,7 +18,7 @@ type Client() =
                 do! awaitTaskVoid (streamWriter.WriteLineAsync(msg.ToString()))
                 do! awaitTaskVoid (streamWriter.FlushAsync())
             }
-            |> Async.RunSynchronously
+            |> Async.StartAsTask
         | _ ->  streamWriter.Dispose()
                 failwith "client not connected"
 
