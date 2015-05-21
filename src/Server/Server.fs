@@ -9,9 +9,19 @@ open System.IO
 //•Make it right.
 //•Make it fast.
 
-let mutable clientTaskList : Task list = []
+let mutable clientTaskList : (Task * NetworkStream) list = []
 
 let addClientTask cl = clientTaskList <- cl :: clientTaskList
+
+let writeToClient cl msg =
+    let streamWriter = new StreamWriter(stream= cl)
+    async{
+            do! streamWriter.WriteLineAsync(msg.ToString()) |> Async.AwaitIAsyncResult |> Async.Ignore
+            do! streamWriter.FlushAsync() |> Async.AwaitIAsyncResult |> Async.Ignore
+    }
+
+let forwadMessageToConnectedClients msg =
+        clientTaskList |> List.map(fun (_, snd) -> writeToClient snd msg)
 
 let listenForMessages endpoint cl = 
     let listenWorkflow = 
@@ -21,12 +31,13 @@ let listenForMessages endpoint cl =
                 while true do
                     let! line = reader.ReadLineAsync() |> Async.AwaitTask
                     printfn "MSG from %s: %s" endpoint line
-            with ex -> printfn "%s disconnected" endpoint
+                    do! forwadMessageToConnectedClients line |> Async.Parallel |> Async.Ignore
+            with _ -> printfn "%s disconnected" endpoint
         }
     listenWorkflow
 
 let listen port = 
-    let listenWorkflow = 
+    let listenWorkflow =  
         async { 
             let listener = new TcpListener(IPAddress.Any, port)
             listener.Start()
@@ -36,6 +47,6 @@ let listen port =
                 let endpoint = (client.Client.RemoteEndPoint :?> IPEndPoint).Address.ToString()
                 printfn "client connected: %A" endpoint
                 let clientListenTask = listenForMessages endpoint (client.GetStream()) |> Async.StartAsTask
-                addClientTask clientListenTask
+                addClientTask (clientListenTask, client.GetStream())
         }
     Async.StartAsTask listenWorkflow

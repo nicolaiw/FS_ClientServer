@@ -8,14 +8,13 @@ open Client
 [<EntryPoint>]
 let main argv = 
 
-    let cl = new Client()
+    use cl = new Client()
 
-    cl.ConnectTo("127.0.0.1", 8081) 
-
+    let t = cl.ConnectTo("127.0.0.1", 8081) 
     while true do
-        printf "MSG: "
+        printf "Msg: "
         let msg = System.Console.ReadLine()
-        cl.Write(msg)
+        cl.Write(msg) |> ignore
+        
 
-    System.Console.ReadLine() |> ignore
     0 // return an integer exit code
