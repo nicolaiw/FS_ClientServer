@@ -18,7 +18,7 @@ type Client() =
 
             while true do
                 let! line = streamReader.ReadLineAsync() |> Async.AwaitTask
-                printf "\nINC MSG FROM %s: %s\n" ((tcpClient.Client.RemoteEndPoint :?> IPEndPoint).Address.ToString()) line
+                printf "\nINC MSG FROM%s\n"  line
         }
 
     member this.ConnectTo(host, port) = 

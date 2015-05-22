@@ -31,7 +31,7 @@ let listenForMessages endpoint cl =
                 while true do
                     let! line = reader.ReadLineAsync() |> Async.AwaitTask
                     printfn "MSG from %s: %s" endpoint line
-                    do! forwadMessageToConnectedClients line |> Async.Parallel |> Async.Ignore
+                    do! forwadMessageToConnectedClients (endpoint + ": " + line) |> Async.Parallel |> Async.Ignore
             with _ -> printfn "%s disconnected" endpoint
         }
     listenWorkflow
