@@ -5,6 +5,8 @@ open Server
 [<EntryPoint>]
 let main argv = 
     
+    //let t = [1..5] |> removeFirst (fun (item) -> item = 3)
+
     let listenTask = Server.listen(8081)
 
     System.Console.ReadLine() |> ignore
