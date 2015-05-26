@@ -26,7 +26,7 @@ let forwadMessageToConnectedClients msg =
 let removeFirst pred list = 
     let rec removeFirstTailRec p l acc =
         match l with
-        | [] -> acc
+        | [] -> acc |> List.rev
         | h::t when p h -> (acc |> List.rev) @ t
         | h::t -> removeFirstTailRec p t (h::acc)
     removeFirstTailRec pred list []
