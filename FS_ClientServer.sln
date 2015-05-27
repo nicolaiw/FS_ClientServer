@@ -7,6 +7,13 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Client", "src\Client\Client
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Server", "src\Server\Server.fsproj", "{B9393343-5C44-4B56-B661-C6ABEA033841}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BC48869A-6871-4A3F-A3A1-BDB934BE0EF7}"
+	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+		build.fsx = build.fsx
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
